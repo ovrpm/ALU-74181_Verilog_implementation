@@ -71,7 +71,7 @@ void Valu::eval_step() {
 bool Valu::eventsPending() { return false; }
 
 uint64_t Valu::nextTimeSlot() {
-    VL_FATAL_MT(__FILE__, __LINE__, "", "%Error: No delays in the design");
+    VL_FATAL_MT(__FILE__, __LINE__, "", "No delays in the design");
     return 0;
 }
 
@@ -100,11 +100,4 @@ unsigned Valu::threads() const { return 1; }
 void Valu::prepareClone() const { contextp()->prepareClone(); }
 void Valu::atClone() const {
     contextp()->threadPoolpOnClone();
-}
-
-//============================================================
-// Trace configuration
-
-VL_ATTR_COLD void Valu::trace(VerilatedVcdC* tfp, int levels, int options) {
-    vl_fatal(__FILE__, __LINE__, __FILE__,"'Valu::trace()' called on model that was Verilated without --trace option");
 }

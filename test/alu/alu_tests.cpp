@@ -81,10 +81,10 @@ bool test_logic(Valu* dut)
 			//std::cout << "expected = " << expected_output << " dut = " << dut_output << '\n';
 		}else{
 			std::cout << "hi!\na = " << rand_a << " b = " << rand_b << " alu = " << dut_output << " cpp = " << expected_output<< std::endl;
-			return 0;
+			return false;
 	    }
-    }
-    return 1;
+	}
+	return true;
 }
 
 //operation 0: in_a
@@ -688,22 +688,38 @@ bool test_arithmetic_15(Valu* dut)
 
 bool test_arithmetic(Valu* dut)
 {
-	if(!test_arithmetic_0(dut)) return 0;
-	if(!test_arithmetic_1(dut)) return 0;
-	if(!test_arithmetic_2(dut)) return 0;
-	if(!test_arithmetic_3(dut)) return 0;
-	if(!test_arithmetic_4(dut)) return 0;
-	if(!test_arithmetic_5(dut)) return 0;
-	if(!test_arithmetic_6(dut)) return 0;
-	if(!test_arithmetic_7(dut)) return 0;
-	if(!test_arithmetic_8(dut)) return 0;
-	if(!test_arithmetic_9(dut)) return 0;
-	if(!test_arithmetic_10(dut)) return 0;
-	if(!test_arithmetic_11(dut)) return 0;
-	if(!test_arithmetic_12(dut)) return 0;
-	if(!test_arithmetic_13(dut)) return 0;
-	if(!test_arithmetic_14(dut)) return 0;
-	if(!test_arithmetic_15(dut)) return 0;
+	if(!test_arithmetic_0(dut)) 
+		return false;
+	if(!test_arithmetic_1(dut)) 
+		return false;
+	if(!test_arithmetic_2(dut)) 
+		return false;
+	if(!test_arithmetic_3(dut)) 
+		return false;
+	if(!test_arithmetic_4(dut)) 
+		return false;
+	if(!test_arithmetic_5(dut)) 
+		return false;
+	if(!test_arithmetic_6(dut)) 
+		return false;
+	if(!test_arithmetic_7(dut)) 
+		return false;
+	if(!test_arithmetic_8(dut)) 
+		return false;
+	if(!test_arithmetic_9(dut)) 
+		return false;
+	if(!test_arithmetic_10(dut)) 
+		return false;
+	if(!test_arithmetic_11(dut)) 
+		return false;
+	if(!test_arithmetic_12(dut)) 
+		return false;
+	if(!test_arithmetic_13(dut)) 
+		return false;
+	if(!test_arithmetic_14(dut)) 
+		return false;
+	if(!test_arithmetic_15(dut)) 
+		return false;
 
-	return 1;
+	return true;
 }

@@ -3,22 +3,21 @@
 // See Valu.h for the primary calling header
 
 #include "Valu__pch.h"
-#include "Valu__Syms.h"
-#include "Valu___024root.h"
 
 void Valu___024root___ctor_var_reset(Valu___024root* vlSelf);
 
-Valu___024root::Valu___024root(Valu__Syms* symsp, const char* v__name)
-    : VerilatedModule{v__name}
-    , vlSymsp{symsp}
+Valu___024root::Valu___024root(Valu__Syms* symsp, const char* namep)
  {
+    vlSymsp = symsp;
+    vlNamep = strdup(namep);
     // Reset structure values
     Valu___024root___ctor_var_reset(this);
 }
 
 void Valu___024root::__Vconfigure(bool first) {
-    if (false && first) {}  // Prevent unused
+    (void)first;  // Prevent unused variable warning
 }
 
 Valu___024root::~Valu___024root() {
+    VL_DO_DANGLING(std::free(const_cast<char*>(vlNamep)), vlNamep);
 }
