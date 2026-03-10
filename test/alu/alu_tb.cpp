@@ -17,6 +17,7 @@ int main()
 
         return 0;
     }
+
     if(!test_logic(dut)){
         std::cout << "Failed in logic\n";
 

@@ -2,91 +2,6 @@
 #include "alu_tests.h"
 #include <iostream>
 
-bool test_logic(Valu* dut)
-{
-	dut->mode = 1;
-
-	for (int i = 0; i < 1000; i++)
-	{
-		int rand_a = rand() % 65536;
-		int rand_b = rand() % 65536;
-
-		dut->in_a = rand_a;
-		dut->in_b = rand_b;
-
-		//select operation
-		//dut->sel = 0;
-		if (i < 63) 
-			dut->sel = 0; 			//0
-		else if (i < 127 ) 
-			dut->sel = 1;
-		else if (i < 190) 
-			dut->sel = 2;
-		else if (i < 254) 
-			dut->sel = 3;
-		else if (i < 317) 
-			dut->sel = 4;
-		else if (i < 381) 
-			dut->sel = 5;
-		else if (i < 444) 
-			dut->sel = 6;
-		else if (i < 508) 
-			dut->sel = 7;
-		else if (i < 571) 
-			dut->sel = 8;
-		else if (i < 645) 
-			dut->sel = 9;
-		else if (i < 708) 
-			dut->sel = 10;
-		else if (i < 772) 
-			dut->sel = 11;
-		else if (i < 835) 
-			dut->sel = 12;
-		else if (i < 899) 
-			dut->sel = 13;
-		else if (i < 962) 
-			dut->sel = 14;
-		else 
-			dut->sel = 15;
-
-		//evaluate
-		dut->eval();
-
-		//expected outputs
-		int expected_output;
-		if (i < 63)	expected_output = 65535 - rand_a; 			//0
-		else if (i < 127 ) expected_output = 65535 - (rand_a | rand_b);	//1
-		else if (i < 190) expected_output = (65535 - rand_a) & rand_b;	//2
-		else if (i < 254) expected_output = 0;				//3
-        	else if (i < 317) expected_output = 65535 - (rand_a & rand_b);	//4
-	        else if (i < 381) expected_output = 65535 - rand_b;			//5
-        	else if (i < 444) expected_output = rand_a ^ rand_b;			//6
-	        else if (i < 508) expected_output = rand_a & (65535 - rand_b);	//7
-        	else if (i < 571) expected_output = (65535 - rand_a) | rand_b;	//8
-	        else if (i < 645) expected_output = 65535 - (rand_a ^ rand_b);	//9
-        	else if (i < 708) expected_output = rand_b;				//10
-	        else if (i < 772) expected_output = rand_a & rand_b;			//11
-        	else if (i < 835) expected_output = 1;				//12
-	        else if (i < 899) expected_output = rand_a | (65535 - rand_b);	//13
-        	else if (i < 962) expected_output = rand_a | rand_b;			//14
-		else expected_output = rand_a;				//15
-
-		int expected_compare = (rand_a == rand_b);
-		int dut_compare = (int)dut->compare;
-
-		int dut_output = (int)dut->alu_out;
-
-		if (expected_output == dut_output && expected_compare == dut_compare){
-			std::cout << "OK" << std::endl;
-			//std::cout << "expected = " << expected_output << " dut = " << dut_output << '\n';
-		}else{
-			std::cout << "hi!\na = " << rand_a << " b = " << rand_b << " alu = " << dut_output << " cpp = " << expected_output<< std::endl;
-			return false;
-	    }
-	}
-	return true;
-}
-
 //operation 0: in_a
 bool test_arithmetic_0(Valu* dut)
 {
@@ -97,9 +12,13 @@ bool test_arithmetic_0(Valu* dut)
 
 	for (int i = 0; i < 1000; i++)
 	{
-		rand_a = rand() % 65536; //2^16 = 65536
+		rand_a = rand() % 65536;
+		rand_b = rand() % 65536;
+		rand_cin = rand() % 2;
 
 		dut->in_a = rand_a;
+		dut->in_b = rand_b;
+		dut->carry_in = rand_cin;
 		dut->eval();
 	
 		int expected_output = rand_a;
@@ -129,9 +48,11 @@ bool test_arithmetic_1(Valu* dut)
 	{
 		rand_a = rand() % 65536;
 		rand_b = rand() % 65536;
+		rand_cin = rand() % 2;
 
 		dut->in_a = rand_a;
 		dut->in_b = rand_b;
+		dut->carry_in = rand_cin;
 		dut->eval();
 
 		int expected_output = rand_a | rand_b;
@@ -159,9 +80,11 @@ bool test_arithmetic_2(Valu* dut)
 	{
 		rand_a = rand() % 65536;
 		rand_b = rand() % 65536;
+		rand_cin = rand() % 2;
 
 		dut->in_a = rand_a;
 		dut->in_b = rand_b;
+		dut->carry_in = rand_cin;
 		dut->eval();
 
 		int expected_output = rand_a | (65535 - rand_b);
@@ -182,8 +105,17 @@ bool test_arithmetic_2(Valu* dut)
 //operation 3: -a
 bool test_arithmetic_3(Valu* dut)
 {
+	int rand_a, rand_b, rand_cin;
 	dut->mode = 0;
 	dut->sel = 3;
+
+	rand_a = rand() % 65536;
+	rand_b = rand() % 65536;
+	rand_cin = rand() % 2;
+
+	dut->in_a = rand_a;
+	dut->in_b = rand_b;
+	dut->carry_in = rand_cin;
 	dut->eval();
 
 	std::cout << (int)dut->alu_out << std::endl;
@@ -201,9 +133,11 @@ bool test_arithmetic_4(Valu* dut)
 	{
 		rand_a = rand() % 65536;
 		rand_b = rand() % 65536;
+		rand_cin = rand() % 2;
 
 		dut->in_a = rand_a;
 		dut->in_b = rand_b;
+		dut->carry_in = rand_cin;
 		dut->eval();
 
 		int expected_output = rand_a | rand_a & (65535 - rand_b);
@@ -682,6 +616,91 @@ bool test_arithmetic_15(Valu* dut)
 			    " cpp = " << expected_output << " alu_c = " << dut_cout << " cpp_c = " << expected_cout<< std::endl;
 		    return false;
 		}
+	}
+	return true;
+}
+
+bool test_logic(Valu* dut)
+{
+	dut->mode = 1;
+
+	for (int i = 0; i < 1000; i++)
+	{
+		int rand_a = rand() % 65536;
+		int rand_b = rand() % 65536;
+
+		dut->in_a = rand_a;
+		dut->in_b = rand_b;
+
+		//select operation
+		//dut->sel = 0;
+		if (i < 63) 
+			dut->sel = 0; 			//0
+		else if (i < 127 ) 
+			dut->sel = 1;
+		else if (i < 190) 
+			dut->sel = 2;
+		else if (i < 254) 
+			dut->sel = 3;
+		else if (i < 317) 
+			dut->sel = 4;
+		else if (i < 381) 
+			dut->sel = 5;
+		else if (i < 444) 
+			dut->sel = 6;
+		else if (i < 508) 
+			dut->sel = 7;
+		else if (i < 571) 
+			dut->sel = 8;
+		else if (i < 645) 
+			dut->sel = 9;
+		else if (i < 708) 
+			dut->sel = 10;
+		else if (i < 772) 
+			dut->sel = 11;
+		else if (i < 835) 
+			dut->sel = 12;
+		else if (i < 899) 
+			dut->sel = 13;
+		else if (i < 962) 
+			dut->sel = 14;
+		else 
+			dut->sel = 15;
+
+		//evaluate
+		dut->eval();
+
+		//expected outputs
+		int expected_output;
+		if (i < 63)	expected_output = 65535 - rand_a; 			//0
+		else if (i < 127 ) expected_output = 65535 - (rand_a | rand_b);	//1
+		else if (i < 190) expected_output = (65535 - rand_a) & rand_b;	//2
+		else if (i < 254) expected_output = 0;				//3
+        	else if (i < 317) expected_output = 65535 - (rand_a & rand_b);	//4
+	        else if (i < 381) expected_output = 65535 - rand_b;			//5
+        	else if (i < 444) expected_output = rand_a ^ rand_b;			//6
+	        else if (i < 508) expected_output = rand_a & (65535 - rand_b);	//7
+        	else if (i < 571) expected_output = (65535 - rand_a) | rand_b;	//8
+	        else if (i < 645) expected_output = 65535 - (rand_a ^ rand_b);	//9
+        	else if (i < 708) expected_output = rand_b;				//10
+	        else if (i < 772) expected_output = rand_a & rand_b;			//11
+        	else if (i < 835) expected_output = 1;				//12
+	        else if (i < 899) expected_output = rand_a | (65535 - rand_b);	//13
+        	else if (i < 962) expected_output = rand_a | rand_b;			//14
+		else expected_output = rand_a;				//15
+
+		int expected_compare = (rand_a == rand_b);
+		int dut_compare = (int)dut->compare;
+
+		int dut_output = (int)dut->alu_out;
+
+		if (expected_output == dut_output && expected_compare == dut_compare){
+			std::cout << "OK" << std::endl;
+			//std::cout << "expected = " << expected_output << " dut = " << dut_output << '\n';
+		}else{
+			std::cout << "hi!\na = " << rand_a << " b = " << rand_b << " alu = " << dut_output << " cpp = " << expected_output<< std::endl;
+			return false;
+	    }
 	}
 	return true;
 }
